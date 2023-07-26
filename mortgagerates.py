@@ -11,7 +11,7 @@ API_Key = '5e8ed80210b838d7123b16e9e8faf111'
  
 fred = Fred(api_key=API_Key)
  
-######### Treasrury Spread 10 Year minus 2 Year##########
+######### Get the Rates from FRED ##########
 FEDFUNDSStats = fred.get_series(series_id='FEDFUNDS')
 PrimeStats = fred.get_series(series_id='PRIME')
 
@@ -40,7 +40,6 @@ Current10over2Rate = Treasury10over2Data.tail(1).to_string(header=False)
 
 Mortgage30yrData = pd.DataFrame(MORTGAGE30USStats)
 Current30yrRate = Mortgage30yrData.tail(1).to_string(header=False)
-
 
 Mortgage15yrData = pd.DataFrame(MORTGAGE15USStats)
 Current15yrRate = Mortgage15yrData.tail(1).to_string(header=False)
