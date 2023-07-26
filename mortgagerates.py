@@ -23,7 +23,7 @@ DGS2Stats = fred.get_series(series_id='DGS2')
 #print(TreasurySpreadStats)
 
 
-FedFundsData = pd.DataFrame(FEDFUNDSStats)
+FedFundsData = pd.DataFrame(FEDFUNDSStats, PrimeStats)
 CurrentFedFundsRate = FedFundsData.tail(1).to_string(header=False)
 
 PrimeData = pd.DataFrame(PrimeStats)
@@ -57,7 +57,7 @@ st.title('Mortgage Rates Dashboard')
 
 st.header('Fed Funds Rate')
 st.write(CurrentFedFundsRate)
-st.line_chart(FedFundsData, PrimeData)
+st.line_chart(FedFundsData)
 
 st.header('Prime Rate')
 st.write(CurrentPrimeRate)
