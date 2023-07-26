@@ -57,7 +57,7 @@ st.title('Mortgage Rates Dashboard')
 
 st.header('Fed Funds Rate')
 st.write(CurrentFedFundsRate)
-st.line_chart(FedFundsData)
+st.line_chart(FedFundsData, PrimeData)
 
 st.header('Prime Rate')
 st.write(CurrentPrimeRate)
