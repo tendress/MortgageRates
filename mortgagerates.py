@@ -12,7 +12,7 @@ API_Key = '5e8ed80210b838d7123b16e9e8faf111'
 fred = Fred(api_key=API_Key)
  
 ######### Get the Rates from FRED ##########
-FEDFUNDSStats = fred.get_series(series_id='FEDFUNDS')
+FEDFUNDSStats = fred.get_series(series_id='FEDFUNDS', 'PRIME')
 PrimeStats = fred.get_series(series_id='PRIME')
 
 MORTGAGE30USStats = fred.get_series(series_id='MORTGAGE30US')
@@ -23,7 +23,7 @@ DGS2Stats = fred.get_series(series_id='DGS2')
 #print(TreasurySpreadStats)
 
 
-FedFundsData = pd.DataFrame(FEDFUNDSStats, PrimeStats)
+FedFundsData = pd.DataFrame(FEDFUNDSStats)
 CurrentFedFundsRate = FedFundsData.tail(1).to_string(header=False)
 
 PrimeData = pd.DataFrame(PrimeStats)
