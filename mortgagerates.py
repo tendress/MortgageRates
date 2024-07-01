@@ -3,86 +3,37 @@ from datetime import datetime
 import pandas as pd
 from fredapi import Fred
 import matplotlib.pyplot as plt
-#plt.style.use('fivethirtyeight')
- 
+
 API_Key = '5e8ed80210b838d7123b16e9e8faf111'
-  
-# First Create the FRED Object#
- 
+
+# Create the FRED Object
 fred = Fred(api_key=API_Key)
- 
-######### Get the Rates from FRED ##########
-FEDFUNDSStats = fred.get_series(series_id='FEDFUNDS')
-PrimeStats = fred.get_series(series_id='PRIME')
 
-MORTGAGE30USStats = fred.get_series(series_id='MORTGAGE30US')
-MORTGAGE15USStats = fred.get_series(series_id='MORTGAGE15US')
-T10Y2YStats = fred.get_series(series_id='T10Y2Y')
-DGS10Stats = fred.get_series(series_id='DGS10')
-DGS2Stats = fred.get_series(series_id='DGS2')
-#print(TreasurySpreadStats)
+# Get the Rates from FRED
+series_ids = {
+    'Fed Funds Rate': 'FEDFUNDS',
+    'Prime Rate': 'PRIME',
+    '30 Year Mortgage Rate': 'MORTGAGE30US',
+    '15 Year Mortgage Rate': 'MORTGAGE15US',
+    '10 Year vs. 2 Year Treasury': 'T10Y2Y',
+    '10 Year Treasury Rate': 'DGS10',
+    '2 Year Treasury Rate': 'DGS2'
+}
 
+data = {}
+current_rates = {}
 
-FedFundsData = pd.DataFrame(FEDFUNDSStats)
-CurrentFedFundsRate = FedFundsData.tail(1).to_string(header=False)
+for key, series_id in series_ids.items():
+    data[key] = fred.get_series(series_id=series_id)
+    current_rates[key] = data[key].iloc[-1]
 
-PrimeData = pd.DataFrame(PrimeStats)
-CurrentPrimeRate = PrimeData.tail(1).to_string(header=False)
+# Convert series to DataFrame
+data_frames = {key: pd.DataFrame(value, columns=[key]) for key, value in data.items()}
 
-Treasury10yrData = pd.DataFrame(DGS10Stats)
-Current10yrTreasuryRate = Treasury10yrData.tail(1).to_string(header=False)
-
-Treasury2yrData = pd.DataFrame(DGS2Stats)
-Current2yrTreasuryRate = Treasury2yrData.tail(1).to_string(header=False)
-
-Treasury10over2Data = pd.DataFrame(T10Y2YStats)
-Current10over2Rate = Treasury10over2Data.tail(1).to_string(header=False)
-
-Mortgage30yrData = pd.DataFrame(MORTGAGE30USStats)
-Current30yrRate = Mortgage30yrData.tail(1).to_string(header=False)
-
-Mortgage15yrData = pd.DataFrame(MORTGAGE15USStats)
-Current15yrRate = Mortgage15yrData.tail(1).to_string(header=False)
-
-
-
-
-
-
-
-
-
-
+# Streamlit app
 st.title('Mortgage Rates Dashboard')
 
-st.header('Fed Funds Rate')
-st.write(CurrentFedFundsRate)
-st.line_chart(FedFundsData)
-
-st.header('Prime Rate')
-st.write(CurrentPrimeRate)
-st.line_chart(PrimeData)
-
-st.header('10 Year vs. 2 Year Treasury')
-st.write(Current10over2Rate)
-st.line_chart(Treasury10over2Data)
-
-st.header('10 Year Treasury Rate')
-st.write(Current10yrTreasuryRate)
-st.line_chart(Treasury10yrData)
-
-st.header('2 Year Treasury Rate')
-st.write(Current2yrTreasuryRate)
-st.line_chart(Treasury2yrData)
-
-
-st.header('30 Year Mortgage Rate')
-st.write(Current30yrRate)
-st.line_chart(Mortgage30yrData)
-
-st.header('15 Year Mortgage Rate')
-st.write(Current15yrRate)
-st.line_chart(Mortgage15yrData)
-
-
-
+for key, df in data_frames.items():
+    st.header(key)
+    st.write(f"Current {key}: {current_rates[key]:.2f}")
+    st.line_chart(df)
